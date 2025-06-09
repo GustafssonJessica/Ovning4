@@ -62,6 +62,20 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         static void ExamineList()
         {
+            /* FRÅGOR
+              När ökar listans kapacitet? (Alltså den underliggande arrayens storlek) 
+                    Den ökar när man lägger till ett till element i listan och den redan är full.
+              Med hur mycket ökar kapaciteten? 
+                    Den ökar till dubbel storlek jämfört med den tidigare kapaciteten.
+              Varför ökar inte listans kapacitet i samma takt som element läggs till? 
+                     För att det skulle bli innefektivt att öka kapaciteten med 1 varje gång ett element läggs till (KOLLA UPP)
+              Minskar kapaciteten när element tas bort ur listan? 
+                    Nej det gör den inte, kapaciteten förblir samma.
+              När är det då fördelaktigt att använda en egendefinierad array istället för en lista?
+                    När man vill ha kontroll över hur många element som ska kunna lagras i arrayen. (KOLLA UPP)
+             */
+
+
             /*
              * Loop this method untill the user inputs something to exit to main menue.
              * Create a switch statement with cases '+' and '-'
@@ -72,12 +86,41 @@ namespace SkalProj_Datastrukturer_Minne
              * Below you can see some inspirational code to begin working.
             */
 
-            //List<string> theList = new List<string>();
-            //string input = Console.ReadLine();
-            //char nav = input[0];
-            //string value = input.substring(1);
+            Console.WriteLine("Instructions: Please enter a word that you either want to add or remove from a list.\n" +
+                "To add a word, type in + before the word.\n " +
+                "To remove a word type in - before the word \n" +
+                "If you want to get back to the main menu, please press Q \n");
 
-            //switch(nav){...}
+            List<string> theList = new List<string>();
+            do
+            {
+                string? input = Console.ReadLine();
+                char nav = input[0]; //få bort varningen
+                string value = input.Substring(1);
+
+                switch (nav)
+                {
+                    case ('+'):
+                        theList.Add(value);
+                        Console.WriteLine($"Added {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}");
+                        break;
+                    case ('-'):
+                        theList.Remove(value);
+                        Console.WriteLine($"Removed {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}");
+                        break;
+                    case ('Q'):
+                        Console.Clear();
+                        return;
+                    default:
+                        Console.WriteLine("You should use + and - before the word you want to enter/remove");
+                        break;
+                }
+                foreach (var item in theList)
+                {
+                    Console.WriteLine(item);
+                }
+
+            } while (true);
         }
 
         /// <summary>
