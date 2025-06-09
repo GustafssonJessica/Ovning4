@@ -88,15 +88,15 @@ namespace SkalProj_Datastrukturer_Minne
              * Below you can see some inspirational code to begin working.
             */
 
-            Console.WriteLine("Instructions: Please enter a word that you either want to add or remove from a list.\n" +
-                "To add a word, type in + before the word.\n " +
-                "To remove a word type in - before the word \n" +
-                "If you want to get back to the main menu, please press Q \n");
+            Console.WriteLine("Please enter a word that you either want to add\n" +
+                "or remove from a list.To add a word, type in + before the word.\n" +
+                "To remove a word type in - before the word\n" +
+                "If you want to get back to the main menu, please press 0");
 
             List<string> theList = new List<string>();
             do
             {
-                string? input = Console.ReadLine();
+                string? input = Console.ReadLine(); //todo blev inte till upper??
                 char nav = input[0]; //få bort varningen
                 string value = input.Substring(1);
 
@@ -110,7 +110,7 @@ namespace SkalProj_Datastrukturer_Minne
                         theList.Remove(value);
                         Console.WriteLine($"Removed {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}");
                         break;
-                    case ('Q'):
+                    case ('0'):
                         Console.Clear();
                         return;
                     default:
@@ -125,18 +125,19 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         static void ExamineQueue()
         {
+
             /*
              * Loop this method untill the user inputs something to exit to main menue.
              * Create a switch with cases to enqueue items or dequeue items
              * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
             */
 
-            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! Now it´s up to you what should happen:" +
-                "\n" +
+            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! \n" +
+                "Now it´s up to you what should happen:\n" +
                 "1) Put a new person in the line\n" +
                 "2) Serve the first person in the line\n" +
                 "3) See the current queue\n" +
-                "0) End this exersice and return to the main menu\n\n");
+                "0) End this exersice and return to the main menu\n");
 
             Queue<string> queue = new Queue<string>();
 
@@ -170,14 +171,8 @@ namespace SkalProj_Datastrukturer_Minne
                         Console.WriteLine("Invalid input, only 0-3 is allowed");
                         break;
                 }
-                Console.Write("\nPlease enter a new number (1 to add, 2 to serve, 3 to see queue):");
+                Console.Write("\nPlease enter a new number (0-3): ");
             } while (true);
-
-
-
-
-
-
         }
 
         /// <summary>
@@ -185,12 +180,76 @@ namespace SkalProj_Datastrukturer_Minne
         /// </summary>
         static void ExamineStack()
         {
+            /* Q: Varför är det inte så smart att använda en stack i det här fallet? 
+             *      A: För att en stack kör med LIFO (last in first out) medans köer normalt kör FIFO (first in first out).
+             *      Nu får den person som ställer sig sist i kön hjälp först medan den som är först i kön får hjälp sist.
+             */
+
             /*
              * Loop this method until the user inputs something to exit to main menue.
              * Create a switch with cases to push or pop items
              * Make sure to look at the stack after pushing and and poping to see how it behaves
             */
+
+            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! \n" + //TOdo gör nått åt den färskräckliga mängden dublicerad kod
+               "Now it´s up to you what should happen:\n" +
+               "1) Put a new person in the line\n" +
+               "2) Serve the first person in the line\n" +
+               "3) See the current queue\n" +
+               "4) BONUS: Write a word and get it back backwards\n" +
+               "0) End this exersice and return to the main menu\n");
+
+            Stack<string> stringStack = new Stack<string>();
+
+            do
+            {
+                string? input = Console.ReadLine();
+                switch (input)
+                {
+                    case "1":
+                        Console.WriteLine("Please enter name of the person that should join the line: ");
+                        string name = Console.ReadLine(); //gör validering på detta
+                        stringStack.Push(name);
+                        Console.WriteLine($"{name} has joined the queue. People in line: {stringStack.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
+                        break;
+                    case "2": //todo skriv validering för om kön är tom
+                        Console.WriteLine($"{stringStack.Peek()} is now being served");
+                        stringStack.Pop();
+                        Console.WriteLine($"People in line: {stringStack.Count}");
+                        break;
+                    case "3":
+                        Console.WriteLine("Current queue: ");
+                        foreach (var person in stringStack)
+                        {
+                            Console.WriteLine(person);
+                        }
+                        break;
+                    case "4":
+                        Console.WriteLine("Please enter a word that you want to see backwards: ");
+                        string word = Console.ReadLine() ?? string.Empty;
+                        Stack<char> charStack = new Stack<char>();
+
+                        foreach (char character in word) //Strängen är uppbyggd av chars, vilket gör att man kan loopa igenom den
+                        {
+                            charStack.Push(character);
+                        }
+
+                        while (charStack.Count > 0) //Så länge det finns tecken i stacken så skrivs de ut
+                        {
+                            Console.Write(charStack.Pop());
+                        }
+                        break;
+                    case "0":
+                        Console.Clear();
+                        return;
+                    default:
+                        Console.WriteLine("Invalid input, only 0-4 is allowed");
+                        break;
+                }
+                Console.Write("\nPlease enter a new number (0-4): ");
+            } while (true);
         }
+
 
         static void CheckParanthesis()
         {
