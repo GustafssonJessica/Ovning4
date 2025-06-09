@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows.Markup;
 
 namespace SkalProj_Datastrukturer_Minne
 {
@@ -100,7 +102,7 @@ namespace SkalProj_Datastrukturer_Minne
 
                 switch (nav)
                 {
-                    case ('+'):
+                    case ('+'): //TOdo: enkla eller dubbla fnuttar?
                         theList.Add(value);
                         Console.WriteLine($"Added {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}");
                         break;
@@ -115,11 +117,6 @@ namespace SkalProj_Datastrukturer_Minne
                         Console.WriteLine("You should use + and - before the word you want to enter/remove");
                         break;
                 }
-                foreach (var item in theList)
-                {
-                    Console.WriteLine(item);
-                }
-
             } while (true);
         }
 
@@ -133,6 +130,54 @@ namespace SkalProj_Datastrukturer_Minne
              * Create a switch with cases to enqueue items or dequeue items
              * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
             */
+
+            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! Now it´s up to you what should happen:" +
+                "\n" +
+                "1) Put a new person in the line\n" +
+                "2) Serve the first person in the line\n" +
+                "3) See the current queue\n" +
+                "0) End this exersice and return to the main menu\n\n");
+
+            Queue<string> queue = new Queue<string>();
+
+            do
+            {
+                string? input = Console.ReadLine();
+                switch (input)
+                {
+                    case "1":
+                        Console.WriteLine("Please enter name of the person that should join the line: ");
+                        string name = Console.ReadLine(); //gör validering på detta
+                        queue.Enqueue(name);
+                        Console.WriteLine($"{name} has joined the queue. People in line: {queue.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
+                        break;
+                    case "2": //todo skriv validering för om kön är tom
+                        Console.WriteLine($"{queue.Peek()} is now being served");
+                        queue.Dequeue();
+                        Console.WriteLine($"People in line: {queue.Count}");
+                        break;
+                    case "3":
+                        Console.WriteLine("Current queue: ");
+                        foreach (var person in queue)
+                        {
+                            Console.WriteLine(person);
+                        }
+                        break;
+                    case "0":
+                        Console.Clear();
+                        return;
+                    default:
+                        Console.WriteLine("Invalid input, only 0-3 is allowed");
+                        break;
+                }
+                Console.Write("\nPlease enter a new number (1 to add, 2 to serve, 3 to see queue):");
+            } while (true);
+
+
+
+
+
+
         }
 
         /// <summary>
