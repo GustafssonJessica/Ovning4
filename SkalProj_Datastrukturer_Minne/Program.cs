@@ -6,31 +6,18 @@ namespace SkalProj_Datastrukturer_Minne
 {
     class Program
     {
-        /// <summary>
-        /// The main method, vill handle the menues for the program
-        /// </summary>
-        /// <param name="args"></param>
+        //Huvudmetod för att hantera menyn i programmet
         static void Main()
         {
-
             while (true)
             {
-                Console.WriteLine("Please navigate through the menu by inputting the number \n(1, 2, 3 ,4, 0) of your choice"
+                string message = ("Please navigate through the menu by inputting the number \n(1, 2, 3 ,4, 0) of your choice"
                     + "\n1. Examine a List"
                     + "\n2. Examine a Queue"
                     + "\n3. Examine a Stack"
                     + "\n4. CheckParenthesis"
                     + "\n0. Exit the application");
-                char input = ' '; //Creates the character input to be used with the switch-case below.
-                try
-                {
-                    input = Console.ReadLine()![0]; //Tries to set input to the first char in an input line
-                }
-                catch (IndexOutOfRangeException) //If the input line is empty, we ask the users for some input.
-                {
-                    Console.Clear();
-                    Console.WriteLine("Please enter some input!");
-                }
+                char input = ReturnCharInput(message);
                 switch (input)
                 {
                     case '1':
@@ -59,9 +46,7 @@ namespace SkalProj_Datastrukturer_Minne
             }
         }
 
-        /// <summary>
-        /// Examines the datastructure List
-        /// </summary>
+        //Metod för att examinera datastrukturen List genom att lägga till och ta bort element i en lista
         static void ExamineList()
         {
             /* FRÅGOR
@@ -88,15 +73,16 @@ namespace SkalProj_Datastrukturer_Minne
              * Below you can see some inspirational code to begin working.
             */
 
-            string message = "Please enter a word that you either want to add" +
-                " or remove \nfrom a list.To add a word, type in + before the word.\n" +
-                "To remove a word type in - before the word\n" +
-                "If you want to get back to the main menu, please press 0";
+            Console.Write("Please enter a word that you either want to add or remove \nfrom a list.");
+
+            string message = "To add a word, type in + before the word." +
+                    "\nTo remove a word type in - before the word \nIf you want to get back to the main menu, " +
+                    "please press 0\"";
 
             List<string> theList = new List<string>();
-            do
+            do //Do-while loop för att fortsätta fråga användaren om input framtill hen väljer att avsluta
             {
-                string? input = ReturnStringInput(message); //det jobbiga nu är att denna text kommer fram vid varje körning
+                string? input = ReturnStringInput(message);
                 char nav = ' ';
                 nav = input[0];
                 string value = input.Substring(1);
@@ -115,15 +101,13 @@ namespace SkalProj_Datastrukturer_Minne
                         Console.Clear();
                         return;
                     default:
-                        Console.WriteLine("You should use + and - before the word you want to enter/remove");
+                        Console.WriteLine("\nYou should use + and - before the word you want to enter/remove");
                         break;
                 }
             } while (true);
         }
 
-        /// <summary>
-        /// Examines the datastructure Queue
-        /// </summary>
+        //Metod för att examinera datastrukturen Queue genom att skapa en kö
         static void ExamineQueue()
         {
 
@@ -133,24 +117,19 @@ namespace SkalProj_Datastrukturer_Minne
              * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
             */
 
-            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! \n" +
-                "Now it´s up to you what should happen:\n" +
-                "1) Put a new person in the line\n" +
-                "2) Serve the first person in the line\n" +
-                "3) See the current queue\n" +
-                "0) End this exersice and return to the main menu\n");
+            Console.Write("The swedish supermarket Ica has now opened and the queue is empty! \n" +
+                "Now it´s up to you what should happen:");
 
             Queue<string> queue = new Queue<string>();
 
             do
             {
-                char nav = ' ';
-                nav = Console.ReadLine()[0];
+                char nav = ReturnCharInput("\n1) Put a new person in the line \n2) Serve the first person in the line \n3) See the current queue\n0) End this exersice and return to the main menu\n");
                 switch (nav)
                 {
                     case '1':
-                        Console.WriteLine("Please enter name of the person that should join the line: ");
-                        string name = Console.ReadLine(); //gör validering på detta
+                        string instruction = ("Please enter name of the person that should join the line: ");
+                        string name = ReturnStringInput(instruction); //gör validering på detta
                         queue.Enqueue(name);
                         Console.WriteLine($"{name} has joined the queue. People in line: {queue.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
                         break;
@@ -180,13 +159,11 @@ namespace SkalProj_Datastrukturer_Minne
                         Console.WriteLine("Invalid input, only 0-3 is allowed");
                         break;
                 }
-                Console.Write("\nPlease enter a new number (0-3): ");
+                Console.WriteLine("\nPlease enter a new number (0-3)");
             } while (true);
         }
 
-        /// <summary>
-        /// Examines the datastructure Stack
-        /// </summary>
+        //Metod för att examinera datastrukturen Stack genom att skapa en kö
         static void ExamineStack()
         {
             /* Q: Varför är det inte så smart att använda en stack i det här fallet? 
@@ -200,29 +177,31 @@ namespace SkalProj_Datastrukturer_Minne
              * Make sure to look at the stack after pushing and and poping to see how it behaves
             */
 
-            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! \n" + //TOdo gör nått åt den färskräckliga mängden dublicerad kod
-               "Now it´s up to you what should happen:\n" +
+
+            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! \n" +
+               "Now it´s up to you what should happen:");
+
+            string message = (
                "1) Put a new person in the line\n" +
                "2) Serve the first person in the line\n" +
-               "3) See the current queue\n" +
+               "3) See the current queue\n" + //ev ta bort denna extrafunktion
                "4) BONUS: Write a word and get it back backwards\n" +
-               "0) End this exersice and return to the main menu\n");
+               "0) Return to the main menu\n");
 
             Stack<string> stringStack = new Stack<string>();
 
             do
             {
-                char nav = ' ';
-                nav = Console.ReadLine()[0];
+                char nav = ReturnCharInput(message);
                 switch (nav)
                 {
                     case '1':
-                        Console.WriteLine("Please enter name of the person that should join the line: ");
-                        string name = Console.ReadLine(); //gör validering på detta
+                        string instruction = ("Please enter name of the person that should join the line: ");
+                        string name = ReturnStringInput(instruction);
                         stringStack.Push(name);
                         Console.WriteLine($"{name} has joined the queue. People in line: {stringStack.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
                         break;
-                    case '2': //todo skriv validering för om kön är tom
+                    case '2': 
                         if (stringStack.Count == 0)
                         {
                             Console.WriteLine("That is no one to serve, the line is empty!");
@@ -242,8 +221,7 @@ namespace SkalProj_Datastrukturer_Minne
                         }
                         break;
                     case '4':
-                        Console.WriteLine("Please enter a word that you want to see backwards: ");
-                        string word = Console.ReadLine() ?? string.Empty;
+                        string word = ReturnStringInput("Please enter a word that you want to see backwards: ");
                         Stack<char> charStack = new Stack<char>();
 
                         foreach (char character in word) //Strängen är uppbyggd av chars, vilket gör att man kan loopa igenom den
@@ -263,11 +241,11 @@ namespace SkalProj_Datastrukturer_Minne
                         Console.WriteLine("Invalid input, only 0-4 is allowed");
                         break;
                 }
-                Console.Write("\nPlease enter a new number (0-4): ");
+                Console.WriteLine("\nPlease enter a new number (0-4)");
             } while (true);
         }
 
-
+        //Metod för att examinera datastrukturen Stack genom att kontrollera paranteser
         static void CheckParanthesis()
         {
             /*
@@ -275,16 +253,18 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
-            // Console.WriteLine("Please enter a string using paranthesis: ");
 
             do
             {
-                string input = ReturnStringInput("Please enter a string using paranthesis: ");
+                string input = ReturnStringInput("Please enter a string using paranthesis. To return to the main menu, press 0 ");
                 int firstParanthesis = 0;
                 int secondParanthesis = 0;
 
                 if (input == "0")
+                {
+                    Console.Clear();
                     return;
+                }
                 else
                 {
                     List<char> charList = new(input);
@@ -297,14 +277,15 @@ namespace SkalProj_Datastrukturer_Minne
                     }
 
                     if (firstParanthesis == secondParanthesis)
-                        Console.WriteLine($"Your text {input} is well formated, you close all paranthesis");
+                        Console.WriteLine($"Your text {input} is well formated, you closed all paranthesis");
                     else
-                        Console.WriteLine($"Your text {input} is NOT well formated, you don't close all paranthesis");
+                        Console.WriteLine($"Your text {input} is NOT well formated, you did not closed all paranthesis");
                 }
             } while (true);
         }
 
 
+        //Metod för att validera och returnera en sträng från användarens input
         static string ReturnStringInput(string message)
         {
             string input = string.Empty;
@@ -321,6 +302,7 @@ namespace SkalProj_Datastrukturer_Minne
             return input;
         }
 
+        //Metod för att validera och returnera en char från användarens input
         static char ReturnCharInput(string message)
         {
             string input = string.Empty;
@@ -334,7 +316,7 @@ namespace SkalProj_Datastrukturer_Minne
                 }
                 else
                 {
-                    Console.WriteLine("Please enter a single character!");
+                    Console.WriteLine("Invalid input, try again.");
                 }
             } while (!validChar);
             return input[0];
