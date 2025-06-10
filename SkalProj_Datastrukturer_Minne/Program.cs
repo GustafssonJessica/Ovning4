@@ -66,7 +66,7 @@ namespace SkalProj_Datastrukturer_Minne
         {
             /* FRÅGOR
               När ökar listans kapacitet? (Alltså den underliggande arrayens storlek) 
-                    Den ökar när man lägger till ett till element i listan och den redan är full.
+                    Den underliggande arraysn storlek ökar när man lägger till ett till element i listan och den redan är full.
               Med hur mycket ökar kapaciteten? 
                     Den ökar till dubbel storlek jämfört med den tidigare kapaciteten.
               Varför ökar inte listans kapacitet i samma takt som element läggs till? 
@@ -88,29 +88,30 @@ namespace SkalProj_Datastrukturer_Minne
              * Below you can see some inspirational code to begin working.
             */
 
-            Console.WriteLine("Please enter a word that you either want to add\n" +
-                "or remove from a list.To add a word, type in + before the word.\n" +
+            string message = "Please enter a word that you either want to add" +
+                " or remove \nfrom a list.To add a word, type in + before the word.\n" +
                 "To remove a word type in - before the word\n" +
-                "If you want to get back to the main menu, please press 0");
+                "If you want to get back to the main menu, please press 0";
 
             List<string> theList = new List<string>();
             do
             {
-                string? input = Console.ReadLine(); //todo blev inte till upper??
-                char nav = input[0]; //få bort varningen
+                string? input = ReturnStringInput(message); //det jobbiga nu är att denna text kommer fram vid varje körning
+                char nav = ' ';
+                nav = input[0];
                 string value = input.Substring(1);
 
                 switch (nav)
                 {
-                    case ('+'): //TOdo: enkla eller dubbla fnuttar?
+                    case '+':
                         theList.Add(value);
-                        Console.WriteLine($"Added {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}");
+                        Console.WriteLine($"Added {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}\n");
                         break;
-                    case ('-'):
+                    case '-':
                         theList.Remove(value);
-                        Console.WriteLine($"Removed {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}");
+                        Console.WriteLine($"Removed {value} to the list. Current count: {theList.Count}, Capacity: {theList.Capacity}\n");
                         break;
-                    case ('0'):
+                    case '0':
                         Console.Clear();
                         return;
                     default:
@@ -143,28 +144,36 @@ namespace SkalProj_Datastrukturer_Minne
 
             do
             {
-                string? input = Console.ReadLine();
-                switch (input)
+                char nav = ' ';
+                nav = Console.ReadLine()[0];
+                switch (nav)
                 {
-                    case "1":
+                    case '1':
                         Console.WriteLine("Please enter name of the person that should join the line: ");
                         string name = Console.ReadLine(); //gör validering på detta
                         queue.Enqueue(name);
                         Console.WriteLine($"{name} has joined the queue. People in line: {queue.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
                         break;
-                    case "2": //todo skriv validering för om kön är tom
-                        Console.WriteLine($"{queue.Peek()} is now being served");
-                        queue.Dequeue();
-                        Console.WriteLine($"People in line: {queue.Count}");
+                    case '2':
+                        if (queue.Count == 0)
+                        {
+                            Console.WriteLine("That is no one to serve, the line is empty!");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{queue.Peek()} is now being served");
+                            queue.Dequeue();
+                            Console.WriteLine($"People in line: {queue.Count}");
+                        }
                         break;
-                    case "3":
+                    case '3':
                         Console.WriteLine("Current queue: ");
                         foreach (var person in queue)
                         {
                             Console.WriteLine(person);
                         }
                         break;
-                    case "0":
+                    case '0':
                         Console.Clear();
                         return;
                     default:
@@ -203,28 +212,36 @@ namespace SkalProj_Datastrukturer_Minne
 
             do
             {
-                string? input = Console.ReadLine();
-                switch (input)
+                char nav = ' ';
+                nav = Console.ReadLine()[0];
+                switch (nav)
                 {
-                    case "1":
+                    case '1':
                         Console.WriteLine("Please enter name of the person that should join the line: ");
                         string name = Console.ReadLine(); //gör validering på detta
                         stringStack.Push(name);
                         Console.WriteLine($"{name} has joined the queue. People in line: {stringStack.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
                         break;
-                    case "2": //todo skriv validering för om kön är tom
-                        Console.WriteLine($"{stringStack.Peek()} is now being served");
-                        stringStack.Pop();
-                        Console.WriteLine($"People in line: {stringStack.Count}");
+                    case '2': //todo skriv validering för om kön är tom
+                        if (stringStack.Count == 0)
+                        {
+                            Console.WriteLine("That is no one to serve, the line is empty!");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{stringStack.Peek()} is now being served");
+                            stringStack.Pop();
+                            Console.WriteLine($"People in line: {stringStack.Count}");
+                        }
                         break;
-                    case "3":
+                    case '3':
                         Console.WriteLine("Current queue: ");
                         foreach (var person in stringStack)
                         {
                             Console.WriteLine(person);
                         }
                         break;
-                    case "4":
+                    case '4':
                         Console.WriteLine("Please enter a word that you want to see backwards: ");
                         string word = Console.ReadLine() ?? string.Empty;
                         Stack<char> charStack = new Stack<char>();
@@ -239,7 +256,7 @@ namespace SkalProj_Datastrukturer_Minne
                             Console.Write(charStack.Pop());
                         }
                         break;
-                    case "0":
+                    case '0':
                         Console.Clear();
                         return;
                     default:
@@ -258,9 +275,71 @@ namespace SkalProj_Datastrukturer_Minne
              * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
              * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
              */
+            // Console.WriteLine("Please enter a string using paranthesis: ");
 
+            do
+            {
+                string input = ReturnStringInput("Please enter a string using paranthesis: ");
+                int firstParanthesis = 0;
+                int secondParanthesis = 0;
+
+                if (input == "0")
+                    return;
+                else
+                {
+                    List<char> charList = new(input);
+                    foreach (char c in charList)
+                    {
+                        if (c == '(')
+                            firstParanthesis++;
+                        if (c == ')')
+                            secondParanthesis++;
+                    }
+
+                    if (firstParanthesis == secondParanthesis)
+                        Console.WriteLine($"Your text {input} is well formated, you close all paranthesis");
+                    else
+                        Console.WriteLine($"Your text {input} is NOT well formated, you don't close all paranthesis");
+                }
+            } while (true);
         }
 
+
+        static string ReturnStringInput(string message)
+        {
+            string input = string.Empty;
+            bool validInput = false;
+            do
+            {
+                Console.WriteLine(message); //Dimitris rekommenderade att flytta ned denna. fixa det. 
+                input = Console.ReadLine() ?? String.Empty;
+                if (!string.IsNullOrEmpty(input))
+                {
+                    validInput = true;
+                }
+            } while (!validInput);
+            return input;
+        }
+
+        static char ReturnCharInput(string message)
+        {
+            string input = string.Empty;
+            bool validChar = false;
+            do
+            {
+                input = ReturnStringInput(message);
+                if (input.Length == 1)
+                {
+                    validChar = true;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter a single character!");
+                }
+            } while (!validChar);
+            return input[0];
+        }
     }
 }
+
 
