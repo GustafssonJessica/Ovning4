@@ -277,7 +277,7 @@ namespace SkalProj_Datastrukturer_Minne
                 }
                 else
                 {
-                    List<char> charList = new(input);
+                    List<char> charList = new(input); //TOdo, fixa denna! Nu kan man skriva ")hej" och det godkänns. Plus använd stack!!!
                     foreach (char c in charList)
                     {
                         if (c == '(')
