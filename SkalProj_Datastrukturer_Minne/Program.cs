@@ -1,13 +1,46 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Metrics;
+using System.Numerics;
 using System.Windows.Markup;
 
 namespace SkalProj_Datastrukturer_Minne
 {
+
+    /* FRÅGOR (Teori och fakta)
+     1. Hur fungerar stacken och heapen? Förklara gärna med exempel eller skiss på dess grundläggande funktion 
+
+            Stacken staplar allt som den ska lagra, som en prydlig stapel är en box med ett visst innehåll ligger över den andra och så fortsätter det.
+            Där lagras värdetyper, ex int, double, enum, struct osv. De lagras i sin variabel, i ex "int age = 3" så lagras värdet 3 i age.
+            Stacken är självunderhållande och behöver ej bry sig om garbage collection.
+
+            Heapen lagrar inte lika tydligt utan sakerna ligger i vad som utifrån kan ses som en oordning, det som skapats innan ligger inte nödvändigtvis 
+            under det som skapas efter. Men det är alltid lätt att komma åt ändå, bara man vet var det ligger (har en referens till det). På heapen 
+            lagras referenstyper så som klasser och string.
+            Här kan garbage collection komma och städa, om exempelvis det ligger ett objekt där som det inte finns någon referens till.
+
+ 2. Vad är Value Types respektive Reference Types och vad skiljer dem åt? 
+            Värdetyper är exempelvis int, double, enum, struct med flera, de lagras i stacken.
+            Referenstyper är exempelvis klasser, interface och objekt. De lagras i heapen. De lagras ej i sin variabel så som värdetyper gör, 
+            utan variabeln har bara en referens till objektet där det finns i heapen.
+
+
+3. Följande metoder (se bild nedan) genererar olika svar. Den första returnerar 3, den andra returnerar 4, varför? 
+            I den första används enbart värdetyper, där värdet lagras direkt i variabeln. 
+            Y tilldelas samma värde som V har. Förändrar man sedan värdet i Y så påverkas inte värdet som finns lagrat i X, de är frånskilda. 
+
+            I det andra exemplet är int:en en medlemsvariabel i klassen MyInt. Det skapas en instans av MyInt där MyValue tilldelas siffran 3. 
+            Referensen till instansen av MyInt är variabeln x. När man sedan tilldelar variabeln y samma referens som variabeln x, så pekar de mot samma objekt. När man genom variabeln y ändrar innehållet i det objektet, så kan man se ändringen även när man går via referensen i variabel x. 
+     */
+
+
+
     class Program
     {
         //Huvudmetod för att hantera menyn i programmet
-        static void Main()
+        static void Main() //TOdo förbättra min engelska
         {
             while (true)
             {
@@ -32,10 +65,6 @@ namespace SkalProj_Datastrukturer_Minne
                     case '4':
                         CheckParanthesis();
                         break;
-                    /*
-                     * Extend the menu to include the recursive 
-                     * and iterative exercises.
-                     */
                     case '0':
                         Environment.Exit(0);
                         break;
@@ -49,42 +78,32 @@ namespace SkalProj_Datastrukturer_Minne
         //Metod för att examinera datastrukturen List genom att lägga till och ta bort element i en lista
         static void ExamineList()
         {
-            /* FRÅGOR
+            /* FRÅGOR LIST
               När ökar listans kapacitet? (Alltså den underliggande arrayens storlek) 
-                    Den underliggande arraysn storlek ökar när man lägger till ett till element i listan och den redan är full.
+                    Den underliggande arrayen storlek ökar när man lägger till ett till element i listan och den redan är full.
               Med hur mycket ökar kapaciteten? 
                     Den ökar till dubbel storlek jämfört med den tidigare kapaciteten.
               Varför ökar inte listans kapacitet i samma takt som element läggs till? 
-                     För att det skulle bli innefektivt att öka kapaciteten med 1 varje gång ett element läggs till (KOLLA UPP)
+                     För att det skulle bli innefektivt att öka kapaciteten med ett i taget. För varje gång som kapaciteten ökar
+                     så skapas en ny array med den nya kapaciteten och alla element kopieras över till den nya arrayen.
               Minskar kapaciteten när element tas bort ur listan? 
-                    Nej det gör den inte, kapaciteten förblir samma.
+                    Nej det gör den inte, kapaciteten förblir densamma.
               När är det då fördelaktigt att använda en egendefinierad array istället för en lista?
-                    När man vill ha kontroll över hur många element som ska kunna lagras i arrayen. (KOLLA UPP)
+                    När man vill ha kontroll över hur många element som ska kunna lagras i arrayen. Och om det är kritiskt
+                    med minnesanvändning, eftersom en lista kan reservera extra minne när den växer.
              */
 
+            Console.Write("Please enter a word that you would like to add or remove from the list.");
 
-            /*
-             * Loop this method untill the user inputs something to exit to main menue.
-             * Create a switch statement with cases '+' and '-'
-             * '+': Add the rest of the input to the list (The user could write +Adam and "Adam" would be added to the list)
-             * '-': Remove the rest of the input from the list (The user could write -Adam and "Adam" would be removed from the list)
-             * In both cases, look at the count and capacity of the list
-             * As a default case, tell them to use only + or -
-             * Below you can see some inspirational code to begin working.
-            */
-
-            Console.Write("Please enter a word that you either want to add or remove \nfrom a list.");
-
-            string message = "To add a word, type in + before the word." +
-                    "\nTo remove a word type in - before the word \nIf you want to get back to the main menu, " +
-                    "please press 0\"";
+            string message = "To add a word, type + before the word.\n" +
+                 "To remove a word, type - before the word.\n" +
+                 "If you want to return to the main menu, please press 0.";
 
             List<string> theList = new List<string>();
-            do //Do-while loop för att fortsätta fråga användaren om input framtill hen väljer att avsluta
+            do //Do-while loop för att fortsätta fråga användaren om input framtill hen väljer att avsluta genom att trycka 0
             {
                 string? input = ReturnStringInput(message);
-                char nav = ' ';
-                nav = input[0];
+                char nav = input[0];
                 string value = input.Substring(1);
 
                 switch (nav)
@@ -101,7 +120,7 @@ namespace SkalProj_Datastrukturer_Minne
                         Console.Clear();
                         return;
                     default:
-                        Console.WriteLine("\nYou should use + and - before the word you want to enter/remove");
+                        Console.WriteLine("\nYou should use + and - before the word you want to add/remove");
                         break;
                 }
             } while (true);
@@ -117,18 +136,19 @@ namespace SkalProj_Datastrukturer_Minne
              * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
             */
 
-            Console.Write("The swedish supermarket Ica has now opened and the queue is empty! \n" +
-                "Now it´s up to you what should happen:");
+            Console.Write("The Swedish supermarket ICA has now opened, and the queue is empty!\n" +
+                        "Now it's up to you to decide what happens next:");
 
             Queue<string> queue = new Queue<string>();
 
             do
             {
-                char nav = ReturnCharInput("\n1) Put a new person in the line \n2) Serve the first person in the line \n3) See the current queue\n0) End this exersice and return to the main menu\n");
+                char nav = ReturnCharInput("\n1) Add a new person to the queue\n2) Serve the first person in the queue\n" +
+                    "3) View the current queue\n0) End this exercise and return to the main menu\n");
                 switch (nav)
                 {
                     case '1':
-                        string instruction = ("Please enter name of the person that should join the line: ");
+                        string instruction = ("Please enter name of the person who should join the queue: ");
                         string name = ReturnStringInput(instruction); //gör validering på detta
                         queue.Enqueue(name);
                         Console.WriteLine($"{name} has joined the queue. People in line: {queue.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
@@ -136,7 +156,7 @@ namespace SkalProj_Datastrukturer_Minne
                     case '2':
                         if (queue.Count == 0)
                         {
-                            Console.WriteLine("That is no one to serve, the line is empty!");
+                            Console.WriteLine("There is no one to serve, the queue is empty!");
                         }
                         else
                         {
@@ -178,15 +198,11 @@ namespace SkalProj_Datastrukturer_Minne
             */
 
 
-            Console.WriteLine("The swedish supermarket Ica has now opened and the queue is empty! \n" +
-               "Now it´s up to you what should happen:");
+            Console.Write("The Swedish supermarket ICA has now opened, and the queue is empty!\n" +
+                        "Now it's up to you to decide what happens next:");
 
-            string message = (
-               "1) Put a new person in the line\n" +
-               "2) Serve the first person in the line\n" +
-               "3) See the current queue\n" + //ev ta bort denna extrafunktion
-               "4) BONUS: Write a word and get it back backwards\n" +
-               "0) Return to the main menu\n");
+            string message = ("\n1) Add a new person to the queue\n2) Serve the first person in the queue\n" +
+                    "3) View the current queue\n4) BONUS: Enter a word to see it reversed!\n0) End this exercise and return to the main menu\n");
 
             Stack<string> stringStack = new Stack<string>();
 
@@ -196,12 +212,12 @@ namespace SkalProj_Datastrukturer_Minne
                 switch (nav)
                 {
                     case '1':
-                        string instruction = ("Please enter name of the person that should join the line: ");
+                        string instruction = ("Please enter the name of the person that should join the queue: ");
                         string name = ReturnStringInput(instruction);
                         stringStack.Push(name);
-                        Console.WriteLine($"{name} has joined the queue. People in line: {stringStack.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
+                        Console.WriteLine($"{name} has joined the queue. People in line: {stringStack.Count}");
                         break;
-                    case '2': 
+                    case '2':
                         if (stringStack.Count == 0)
                         {
                             Console.WriteLine("That is no one to serve, the line is empty!");
@@ -221,7 +237,7 @@ namespace SkalProj_Datastrukturer_Minne
                         }
                         break;
                     case '4':
-                        string word = ReturnStringInput("Please enter a word that you want to see backwards: ");
+                        string word = ReturnStringInput("Please enter a word to see it reversed: ");
                         Stack<char> charStack = new Stack<char>();
 
                         foreach (char character in word) //Strängen är uppbyggd av chars, vilket gör att man kan loopa igenom den
@@ -248,15 +264,9 @@ namespace SkalProj_Datastrukturer_Minne
         //Metod för att examinera datastrukturen Stack genom att kontrollera paranteser
         static void CheckParanthesis()
         {
-            /*
-             * Use this method to check if the paranthesis in a string is Correct or incorrect.
-             * Example of correct: (()), {}, [({})],  List<int> list = new List<int>() { 1, 2, 3, 4 };
-             * Example of incorrect: (()]), [), {[()}],  List<int> list = new List<int>() { 1, 2, 3, 4 );
-             */
-
             do
             {
-                string input = ReturnStringInput("Please enter a string using paranthesis. To return to the main menu, press 0 ");
+                string input = ReturnStringInput("Please enter a string that contains parentheses.To return to the main menu, press 0. ");
                 int firstParanthesis = 0;
                 int secondParanthesis = 0;
 
@@ -277,9 +287,9 @@ namespace SkalProj_Datastrukturer_Minne
                     }
 
                     if (firstParanthesis == secondParanthesis)
-                        Console.WriteLine($"Your text {input} is well formated, you closed all paranthesis");
+                        Console.WriteLine($"Your text {input} is well-formatted, you closed all parantheses");
                     else
-                        Console.WriteLine($"Your text {input} is NOT well formated, you did not closed all paranthesis");
+                        Console.WriteLine($"Your text {input} is NOT well formatted, you did not closed all parantheses");
                 }
             } while (true);
         }
