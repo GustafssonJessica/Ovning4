@@ -36,11 +36,10 @@ namespace SkalProj_Datastrukturer_Minne
      */
 
 
-
     class Program
     {
         //Huvudmetod för att hantera menyn i programmet
-        static void Main() //TOdo förbättra min engelska
+        static void Main()
         {
             while (true)
             {
@@ -129,16 +128,8 @@ namespace SkalProj_Datastrukturer_Minne
         //Metod för att examinera datastrukturen Queue genom att skapa en kö
         static void ExamineQueue()
         {
-
-            /*
-             * Loop this method untill the user inputs something to exit to main menue.
-             * Create a switch with cases to enqueue items or dequeue items
-             * Make sure to look at the queue after Enqueueing and Dequeueing to see how it behaves
-            */
-
             Console.Write("The Swedish supermarket ICA has now opened, and the queue is empty!\n" +
                         "Now it's up to you to decide what happens next:");
-
             Queue<string> queue = new Queue<string>();
 
             do
@@ -149,9 +140,9 @@ namespace SkalProj_Datastrukturer_Minne
                 {
                     case '1':
                         string instruction = ("Please enter name of the person who should join the queue: ");
-                        string name = ReturnStringInput(instruction); //gör validering på detta
+                        string name = ReturnStringInput(instruction);
                         queue.Enqueue(name);
-                        Console.WriteLine($"{name} has joined the queue. People in line: {queue.Count}"); //todo är detta samma som hur många platser det finns i kö-listan?
+                        Console.WriteLine($"{name} has joined the queue. People in line: {queue.Count}");
                         break;
                     case '2':
                         if (queue.Count == 0)
@@ -191,18 +182,12 @@ namespace SkalProj_Datastrukturer_Minne
              *      Nu får den person som ställer sig sist i kön hjälp först medan den som är först i kön får hjälp sist.
              */
 
-            /*
-             * Loop this method until the user inputs something to exit to main menue.
-             * Create a switch with cases to push or pop items
-             * Make sure to look at the stack after pushing and and poping to see how it behaves
-            */
-
-
             Console.Write("The Swedish supermarket ICA has now opened, and the queue is empty!\n" +
                         "Now it's up to you to decide what happens next:");
 
             string message = ("\n1) Add a new person to the queue\n2) Serve the first person in the queue\n" +
-                    "3) View the current queue\n4) BONUS: Enter a word to see it reversed!\n0) End this exercise and return to the main menu\n");
+                    "3) View the current queue\n4) BONUS: Enter a word to see it reversed!\n0) End this exercise " +
+                    "and return to the main menu\n");
 
             Stack<string> stringStack = new Stack<string>();
 
@@ -237,18 +222,7 @@ namespace SkalProj_Datastrukturer_Minne
                         }
                         break;
                     case '4':
-                        string word = ReturnStringInput("Please enter a word to see it reversed: ");
-                        Stack<char> charStack = new Stack<char>();
-
-                        foreach (char character in word) //Strängen är uppbyggd av chars, vilket gör att man kan loopa igenom den
-                        {
-                            charStack.Push(character);
-                        }
-
-                        while (charStack.Count > 0) //Så länge det finns tecken i stacken så skrivs de ut
-                        {
-                            Console.Write(charStack.Pop());
-                        }
+                        ReturnReversedString();
                         break;
                     case '0':
                         Console.Clear();
@@ -267,9 +241,6 @@ namespace SkalProj_Datastrukturer_Minne
             do
             {
                 string input = ReturnStringInput("Please enter a string that contains parentheses.To return to the main menu, press 0. ");
-                int firstParanthesis = 0;
-                int secondParanthesis = 0;
-
                 if (input == "0")
                 {
                     Console.Clear();
@@ -277,23 +248,62 @@ namespace SkalProj_Datastrukturer_Minne
                 }
                 else
                 {
-                    List<char> charList = new(input); //TOdo, fixa denna! Nu kan man skriva ")hej" och det godkänns. Plus använd stack!!!
-                    foreach (char c in charList)
+                    bool isCorrect = true;
+                    Stack<char> stack = new Stack<char>();
+                    foreach (char c in input)
                     {
                         if (c == '(')
-                            firstParanthesis++;
-                        if (c == ')')
-                            secondParanthesis++;
+                        {
+                            stack.Push(c);
+                        }
+                        else if (c == ')')
+                        {
+                            if (stack.Count > 0)
+                            {
+                                stack.Pop();
+                            }
+                            else
+                            {
+                                isCorrect = false;
+                            }
+                        }
                     }
-
-                    if (firstParanthesis == secondParanthesis)
+                    if (isCorrect && stack.Count == 0)
+                    {
                         Console.WriteLine($"Your text {input} is well-formatted, you closed all parantheses");
+                    }
                     else
+                    {
                         Console.WriteLine($"Your text {input} is NOT well formatted, you did not closed all parantheses");
+                    }
+                    Console.WriteLine();//Skapar mellanrum
                 }
             } while (true);
         }
 
+        //Metod för att returnera en omvänd sträng med hjälp av en stack
+        static void ReturnReversedString()
+        {
+            string word = ReturnStringInput("Please enter a word to see it reversed: ");
+            if (word  == "0")
+            {
+                return;
+            }
+            else
+            {
+                Stack<char> charStack = new Stack<char>();
+
+                foreach (char character in word) //Strängen är uppbyggd av chars, vilket gör att man kan loopa igenom den. Här lägger man till varje tecken 
+                {
+                    charStack.Push(character);
+                }
+
+                while (charStack.Count > 0) //Så länge det finns tecken i stacken så skrivs de ut
+                {
+                    Console.Write(charStack.Pop());
+                }
+            }
+        }
 
         //Metod för att validera och returnera en sträng från användarens input
         static string ReturnStringInput(string message)
@@ -302,7 +312,7 @@ namespace SkalProj_Datastrukturer_Minne
             bool validInput = false;
             do
             {
-                Console.WriteLine(message); //Dimitris rekommenderade att flytta ned denna. fixa det. 
+                Console.WriteLine(message);
                 input = Console.ReadLine() ?? String.Empty;
                 if (!string.IsNullOrEmpty(input))
                 {
